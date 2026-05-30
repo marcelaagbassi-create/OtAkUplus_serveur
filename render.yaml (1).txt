@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: otakuplus-ai-server
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MISTRAL_API_KEY
+        sync: false
+      - key: MISTRAL_MODEL
+        value: mistral-large-latest
+      - key: NODE_ENV
+        value: production
