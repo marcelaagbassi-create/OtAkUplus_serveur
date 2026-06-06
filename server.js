@@ -19,16 +19,11 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-    origin: function(origin, callback) {
-        if (!origin || allowedOrigins.some(o => origin.startsWith(o))) {
-            callback(null, true);
-        } else {
-            callback(null, true); // permissif pour le dev
-        }
-    },
+    origin: '*', // Permissif - GitHub Pages + local
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+app.options('*', cors()); // Pre-flight
 
 app.use(express.json({ limit: '10kb' }));
 
@@ -206,6 +201,17 @@ app.post('/api/quiz', async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+});
+
+
+// Routes aliases pour compatibilite
+app.post('/chat', async (req, res) => {
+    req.url = '/api/chat';
+    app._router.handle(req, res, () => {});
+});
+app.post('/ask', async (req, res) => {
+    req.url = '/api/chat';
+    app._router.handle(req, res, () => {});
 });
 
 app.listen(PORT, () => {
